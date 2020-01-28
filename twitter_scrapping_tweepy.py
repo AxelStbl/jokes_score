@@ -1,11 +1,17 @@
 import tweepy
+import json
 
-# Fill the X's with the credentials obtained by  
-# following the above mentioned procedure. 
-consumer_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-consumer_secret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-access_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-access_secret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+with open('private.json') as json_file:
+    data = json.load(json_file)
+    consumer_key, consumer_secret, access_key, access_secret = data[
+                                                                   'consumer_key'], \
+                                                               data[
+                                                                   'consumer_secret'], \
+                                                               data[
+                                                                   'access_key'], \
+                                                               data[
+                                                                   'access_secret']
+    print(consumer_key, consumer_secret, access_key, access_secret)
 
 
 # Function to extract tweets
@@ -19,26 +25,17 @@ def get_tweets(username):
     # Calling api
     api = tweepy.API(auth)
 
-    # 200 tweets to be extracted
-    number_of_tweets = 200
-    tweets = api.user_timeline(screen_name=username)
-
-    # Empty Array
-    tmp = []
-
-    # create array of tweet information: username,
-    # tweet id, date/time, text
-    tweets_for_csv = [tweet.text for tweet in tweets]  # CSV file created
-    for j in tweets_for_csv:
-        # Appending tweets to the empty array tmp
-        tmp.append(j)
-
-        # Printing the tweets
-    print(tmp)
+    tweets_store = []
+    for status in tweepy.Cursor(api.user_timeline,
+                                screen_name=username,
+                                tweet_mode="extended").items():
+        tweets_store.append(status.full_text)
+        print(status.full_text)
+    return tweets_store
 
 
-# Driver code 
+# Driver code
 if __name__ == '__main__':
     # Here goes the twitter handle for the user
     # whose tweets are to be extracted.
-    get_tweets("twitter-handle")
+    print(len(get_tweets("@Shen_the_Bird")))

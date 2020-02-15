@@ -22,6 +22,7 @@ Our intention is to use the scrap tweets from a pre-made list of 'funny' pages, 
   - Reddit jokes dataset
   - Tweets dataset (Not in use)
   - Python code for scraping twitter
+<br><br>  
 **Notebooks**
  - EDA
  - Feature Engineering

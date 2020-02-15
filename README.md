@@ -18,11 +18,11 @@ Our intention is to use the scrap tweets from a pre-made list of 'funny' pages, 
 
 ### Files
 
-- **Data** 
- - Reddit jokes dataset
- - Tweets dataset (Not in use)
- - Python code for scraping twitter
-- **Notebooks**
+**Data** 
+  - Reddit jokes dataset
+  - Tweets dataset (Not in use)
+  - Python code for scraping twitter
+**Notebooks**
  - EDA
  - Feature Engineering
  - Feature Processing (Dimensionality Reduction)

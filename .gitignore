@@ -132,3 +132,8 @@ dmypy.json
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
 /.idea/classification_author_tweets.iml
+/Notebooks/Data/eda_reddit_jokes.pkl
+/Notebooks/Data/X_test.pkl
+/Notebooks/Data/X_train.pkl
+/Notebooks/Data/y_test.pkl
+/Notebooks/Data/y_train.pkl

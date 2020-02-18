@@ -8,6 +8,7 @@ import re
 import requests
 from collections import Counter
 import itertools
+from nltk.corpus import wordnet as wn
 
 from spacy.tokenizer import Tokenizer
 import nltk
@@ -82,38 +83,29 @@ def eda():
     return df
 
 
+def create_features_for_joke(joke):
+    df = pd.DataFrame(data=[[joke, 3]], columns=["joke", "score"])
+    df = features_engineering(df)
+    df = pre_processing(df)
+    pd.to_pickle(df, "test.pkl")
+
+
+def pre_processing(df):
+    with open("select_features_model.pkl", "rb") as features_model, open(
+            "features_without_embedding_list.pkl",
+            "rb") as features_without_embedding:
+        return pickle.load(features_model).transform(
+            df[features_without_embedding])
+
+
 def feature_engineering():
     if features_files_exist():
         return pd.read_pickle("./X_train.pkl"), pd.read_pickle(
             "./y_train.pkl"), pd.read_pickle("./X_test.pkl"), pd.read_pickle(
             "./y_test.pkl")
     else:
-        df = eda().iloc[0:500,:]
-        df['joke_words'] = df['joke'].apply(lambda x: len(x.split(' ')))
-        df = df[df['joke_words'] <= 40].reset_index()
-        del df['index']
-        del df['joke_words']
-
-        ambigous_words(df)
-
-        nlp = spacy.load('en')
-
-        token_pos = joke_tokenized(df, nlp)
-        best_score_similarity_words(df, token_pos)
-        antonyms(df, token_pos)
-        longest_word(df, token_pos)
-        speical_chars(df, token_pos)
-
-        feature_matrix_customers, features_defs = create_scores(df)
-        df = pd.concat([df['joke'], feature_matrix_customers], axis=1)
-
-        df = object_count_column(df)
-
-        df = add_pos_count_columns(df)
-
-        ## Text pre-processing
-        text_preprocessing(df, nlp)
-        total_words_chars(df)
+        df = eda().iloc[0:500, :]
+        df = features_engineering(df)
 
         target = 'score'
         X = df[df.columns[df.columns != target]]
@@ -132,6 +124,30 @@ def feature_engineering():
         pd.to_pickle(y_train, "y_train.pkl")
         pd.to_pickle(y_test, "y_test.pkl")
     return X_train, y_train, X_test, y_test
+
+
+def features_engineering(df):
+    df['joke_words'] = df['joke'].apply(lambda x: len(x.split(' ')))
+    df = df[df['joke_words'] <= 40].reset_index()
+    del df['index']
+    del df['joke_words']
+    ambigous_words(df)
+    nlp = spacy.load('en')
+    token_pos = joke_tokenized(df, nlp)
+    best_score_similarity_words(df, token_pos)
+    antonyms(df, token_pos)
+    longest_word(df, token_pos)
+    speical_chars(df, token_pos)
+    feature_matrix_customers, features_defs = create_scores(df)
+
+    df = pd.concat([df['joke'], feature_matrix_customers], axis=1)
+
+    df = object_count_column(df)
+    df = add_pos_count_columns(df)
+    ## Text pre-processing
+    text_preprocessing(df, nlp)
+    total_words_chars(df)
+    return df
 
 
 def vectorise(X_test, X_train, y_test, y_train):
@@ -166,6 +182,7 @@ def total_words_chars(df):
 
 def text_preprocessing(df, nlp):
     def replace_non_eng_punct(txt):
+        print(txt)
         return re.sub(r'/[^a-zA-Z0-9\s,.?!]/', '*', txt).strip()
 
     def replace_escape(txt):
@@ -323,7 +340,6 @@ def longest_word(df, token_pos):
 
 def antonyms(df, token_pos):
     list_of_antonyms = []
-    from nltk.corpus import wordnet as wn
     for i in wn.all_synsets():
         if i.pos() in ['a', 's']:
             for j in i.lemmas():
@@ -350,7 +366,6 @@ def antonyms(df, token_pos):
 
 
 def best_score_similarity_words(df, token_pos):
-    nltk.download('brown')
     b = Word2Vec(brown.sents())
 
     def find_best_similarity(string):
@@ -404,5 +419,6 @@ def features_files_exist():
             return False
     return file_exists
 
+
 if __name__ == '__main__':
-    print(feature_engineering()[0].head())
+    print(create_features_for_joke("test of some joke"))

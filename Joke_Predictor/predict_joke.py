@@ -15,9 +15,7 @@ import nltk
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
-nltk.download('wordnet')
-nltk.download('stopwords')
-nltk.download('punkt')
+
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
@@ -44,9 +42,9 @@ import nltk
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-nltk.download('wordnet')
-nltk.download('stopwords')
-nltk.download('punkt')
+#nltk.download('wordnet')
+#nltk.download('stopwords')
+#nltk.download('punkt')
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
@@ -131,13 +129,13 @@ def features_engineering(df):
     df = df[df['joke_words'] <= 40].reset_index()
     del df['index']
     del df['joke_words']
-    ambigous_words(df)
-    nlp = spacy.load('en')
-    token_pos = joke_tokenized(df, nlp)
-    best_score_similarity_words(df, token_pos)
-    antonyms(df, token_pos)
-    longest_word(df, token_pos)
-    speical_chars(df, token_pos)
+    #ambigous_words(df)
+    #nlp = spacy.load('en')
+    #token_pos = joke_tokenized(df, nlp)
+    #best_score_similarity_words(df, token_pos)
+    #antonyms(df, token_pos)
+    #longest_word(df, token_pos)
+    #speical_chars(df, token_pos)
     feature_matrix_customers, features_defs = create_scores(df)
 
     df = pd.concat([df['joke'], feature_matrix_customers], axis=1)
@@ -145,7 +143,7 @@ def features_engineering(df):
     df = object_count_column(df)
     df = add_pos_count_columns(df)
     ## Text pre-processing
-    text_preprocessing(df, nlp)
+    #text_preprocessing(df, nlp)
     total_words_chars(df)
     return df
 
@@ -311,7 +309,7 @@ def create_scores(df):
                                                      target_entity='jokes_df',
                                                      #   instance_ids=["joke"],
                                                      trans_primitives=trans,
-                                                     max_depth=4)
+                                                     )
     return feature_matrix_customers, features_defs
 
 

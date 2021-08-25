@@ -272,7 +272,7 @@ tables==3.6.1
 tblib==1.6.0
 tensorboard==1.15.0
 tensorboardcolab==0.0.22
-tensorflow==1.15.0
+tensorflow==2.5.1
 tensorflow-estimator==1.15.1
 tensorflow-hub==0.7.0
 termcolor==1.1.0

@@ -39,7 +39,7 @@ clyent==1.2.2
 colorama==0.4.3
 confuse==1.0.0
 contextlib2==0.6.0.post1
-cookiecutter==1.6.0
+cookiecutter==2.1.1
 cryptography==2.8
 cycler==0.10.0
 cymem==2.0.3
